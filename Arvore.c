@@ -12,7 +12,6 @@ struct no {
 struct no *inserir(struct no *raiz, Aluno dados);
 struct no *inserir_esq(struct no *raiz, Aluno dados);
 struct no *inserir_dir(struct no *raiz, Aluno dados);
-void ler_arquivo(char arquivo[20], struct no *raiz);
 void preordem(struct no *raiz);
 void inordem(struct no *raiz);
 void posordem(struct no *raiz);
@@ -20,31 +19,33 @@ void print(Aluno A);
 void print_tree(struct no *raiz, char ordem[9]);
 
 int main(){
-
-struct no *raiz   = (struct no*)malloc(sizeof(struct no));
+    struct no *raiz   = (struct no*)malloc(sizeof(struct no));
        raiz->esq  = NULL;
        raiz->dir  = NULL;
       Aluno  *a = criaraluno("Mikael\0",72,7); //Insere a raiz
        raiz->dado = *a;
-       char aux[20];
-       int op;
-       printf("\nInsira o nome do arquivo e o tipo de arquivo a ser lido: ");
-       scanf("%s", aux);
-       ler_arquivo(aux,raiz);
-
-    printf("\nInsira em qual ordem a raiz deve ser impressa: ");
-    scanf("%s", aux);
-    print_tree(raiz,aux);
-
-    while(op!= 2){
-        printf("\nDeseja imprimir a raiz em outra ordem? ");
-        scanf("%i", &op);
-        if(op == 1){
-        printf("\nInsira em qual ordem a raiz deve ser impressa: ");
-        scanf("%s", aux);
-        print_tree(raiz, aux);
-        } 
+    FILE *arch = fopen ("turma.dat","r");
+    if (arch == NULL){
+        printf("\nNão foi possivel abrir o arquivo");
     }
+    
+    Aluno aluno;
+
+    int nota;
+    int mat;
+    char name[30];
+while(!feof(arch)){
+    fscanf(arch,"%i %i %s", &nota, &mat, name);
+    aluno = criaraluno2(name,mat,nota);
+    raiz = inserir(raiz,aluno);
+}
+
+fclose(arch);
+char ordem[9];
+printf("\nInsira a ordem que deseja imprimir: ");
+scanf("%s", ordem);
+print_tree(raiz,ordem);
+
 }
 
 struct no *novono(Aluno a){
@@ -68,28 +69,6 @@ struct no *inserir(struct no *raiz, Aluno dados){
      return raiz;
 }  
 
-void ler_arquivo(char arquivo[20], struct no *raiz){
-FILE *arch = fopen(arquivo,"r");
-Aluno aluno;
-
-if(arch == NULL){
-    printf("\n Não foi possivel abrir o arquivo");
-}
-
-int n1;
-int id;
-char n[30];
-while(!feof(arch)){
-    fscanf(arch,"%i %i %s", &n1, &id, &n);
-    aluno.n1 = n1;
-    aluno.id = id;
-    aluno.nome = n;
-    raiz = inserir(raiz,aluno);
-}
-
-fclose(arch);
-
-}
 void print(Aluno A) {
     printf("Id: %d\nNome: %s\nNota: %.2f\n\n", A.id, A.nome, A.n1);
 }
