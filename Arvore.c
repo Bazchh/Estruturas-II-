@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "aluno.c"
-#include <locale.h>
+#include <string.h>
 
 struct no {
     Aluno dado;
@@ -20,7 +20,7 @@ void print(Aluno A);
 void print_tree(struct no *raiz, char ordem[9]);
 
 int main(){
-setlocale(LC_ALL,"");
+
 struct no *raiz   = (struct no*)malloc(sizeof(struct no));
        raiz->esq  = NULL;
        raiz->dir  = NULL;
@@ -70,7 +70,7 @@ struct no *inserir(struct no *raiz, Aluno dados){
 
 void ler_arquivo(char arquivo[20], struct no *raiz){
 FILE *arch = fopen(arquivo,"r");
-Aluno aux;
+Aluno aluno;
 
 if(arch == NULL){
     printf("\n Não foi possivel abrir o arquivo");
@@ -80,18 +80,18 @@ int n1;
 int id;
 char n[30];
 while(!feof(arch)){
-    fscanf(arch,"%i %i %s", &n1, &id, n);
-    aux.n1 = n1;
-    aux.id = id;
-    aux.nome = n;
-    raiz = inserir(raiz,aux);
+    fscanf(arch,"%i %i %s", &n1, &id, &n);
+    aluno.n1 = n1;
+    aluno.id = id;
+    aluno.nome = n;
+    raiz = inserir(raiz,aluno);
 }
 
 fclose(arch);
 
 }
 void print(Aluno A) {
-    printf("Nome: %s\nNota: %i\nId: %i\n\n", A.nome, A.n1, A.id);
+    printf("Id: %d\nNome: %s\nNota: %.2f\n\n", A.id, A.nome, A.n1);
 }
 
 void preordem(struct no *raiz) {
@@ -134,11 +134,11 @@ void posordem(struct no *raiz) {
 }
 
 void print_tree(struct no *raiz, char ordem[9]){
-    if (ordem == "preordem"){
+    if (strcmp(ordem,"preordem")){
         preordem(raiz);
-    } else if (ordem == "inordem"){
+    } else if (strcmp(ordem,"inordem")){
         inordem(raiz);
-    } else if (ordem == "posordem"){
+    } else if (strcmp(ordem,"posordem")){
         posordem(raiz);
     } else {
         printf("\nOpção escolhida é inválida");
