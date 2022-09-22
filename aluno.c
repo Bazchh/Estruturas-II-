@@ -33,6 +33,13 @@ Aluno* criaraluno(const char *string, matricula id, nota n){
     novo->nome = string;
     return novo;
 }
+Aluno criaraluno2(const char *string, matricula id, nota n){
+        Aluno novo;
+    novo.n1 = n;
+    novo.id = id;
+    novo.nome = string;
+    return novo;
+}
 /*
 int main(){
     Aluno *a = criaraluno("Mikael\0", 10, 7);
