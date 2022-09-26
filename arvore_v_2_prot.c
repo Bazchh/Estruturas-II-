@@ -35,7 +35,7 @@ printf("\nQual o nome do arquivo a ser aberto: ");
 scanf("%s", arquivo);
 
 Ler_arch(arquivo, raiz);
-
+free(arquivo);
 char ordem[9];
 printf("\nInsira a ordem que deseja imprimir: ");
 scanf("%s", ordem);
@@ -45,9 +45,10 @@ Aluno a1;
 printf("\nInsira dados para serem buscados na arvore: ");
 scanf(" %i %f %s", &a1.id, &a1.n1, a1.nome);
 
-search(raiz, a1);
-printf("\nDados encontrados: ");
 
+printf("\nDados encontrados: ");
+search(raiz, a1);
+free(raiz);
 
 }
 
@@ -153,9 +154,12 @@ fclose(arch);
 
 void search(struct no *raiz, Aluno a){
     struct no *aux = novono(a);
+    if(raiz == NULL){
+        printf("\nA arvore esta vazia");
+    }
     if (raiz = aux){
         Aluno R = aux->dado;
-        return R;
+        print(R);
     } else if(raiz != aux){
         if (raiz > aux){
             search(raiz->dir, a);
