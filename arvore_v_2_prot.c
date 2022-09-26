@@ -12,26 +12,34 @@ struct no {
 struct no *inserir(struct no *raiz, Aluno dados);
 struct no *inserir_esq(struct no *raiz, Aluno dados);
 struct no *inserir_dir(struct no *raiz, Aluno dados);
-void ler_arquivo(FILE *arch, struct no *raiz);
 void preordem(struct no *raiz);
 void inordem(struct no *raiz);
 void posordem(struct no *raiz);
 void print(Aluno A);
-void print_tree(struct no *raiz, char ordem[9]);
+void print_tree(struct no *raiz, char ordem[]);
+void Ler_arch(char nome_arquivo[], struct no *raiz);
 
 int main(){
+    
+struct no *raiz   = (struct no*)malloc(sizeof(struct no));
 
-    FILE *arch = fopen ("turma.dat","r");
-    if (arch == NULL){
-        printf("\nNão foi possivel abrir o arquivo");
-    }
-    struct no *raiz = 0;
+raiz->esq  = NULL;
+raiz->dir  = NULL;
+Aluno  *a = criaraluno("Mikael\0",72,7); //Insere a raiz
+raiz->dado = *a;
 
-    ler_arquivo(arch,raiz);
-    char ordem[9];
-    printf("\nInsira em qual ordem a raiz deve ser impressa: ");
-    scanf("%s", ordem);
-    print_tree(raiz, ordem);
+char *arquivo = (char*)malloc(30*sizeof(char));
+
+printf("\nQual o nome do arquivo a ser aberto: ");
+scanf("%s", arquivo);
+
+Ler_arch(arquivo, raiz);
+
+//fclose(arch);
+char ordem[9];
+printf("\nInsira a ordem que deseja imprimir: ");
+scanf("%s", ordem);
+print_tree(raiz,ordem);
 
 }
 
@@ -56,28 +64,8 @@ struct no *inserir(struct no *raiz, Aluno dados){
      return raiz;
 }  
 
-void ler_arquivo(FILE *file, struct no *raiz){
-
-    Aluno novo;
-    nota n1;
-    int mat;
-    char nome[80];
-   if(!file){
-        printf("IMPOSSIVEL DE ABRIR");
-    }
-    while (!feof(file)){
-        char *nome = (char*)malloc(sizeof(char)*80);
-        fscanf(file, "%d %d %s",&n1, &mat, nome);
-        novo = criaraluno2(nome, mat, n1);
-        raiz = inserir(raiz, novo);
-
-    }
-
-    fclose(file);
-
-}
 void print(Aluno A) {
-    printf("Id: %d\nNome: %s\nNota: %.2f\n\n", A.id, A.nome, A.n1);
+    printf("Id: %d\nNome: %s\nNota: %.1f\n\n", A.id, A.nome, A.n1);
 }
 
 void preordem(struct no *raiz) {
@@ -119,7 +107,7 @@ void posordem(struct no *raiz) {
     }
 }
 
-void print_tree(struct no *raiz, char ordem[9]){
+void print_tree(struct no *raiz, char ordem[]){
     if (strcmp(ordem,"preordem")){
         preordem(raiz);
     } else if (strcmp(ordem,"inordem")){
@@ -129,4 +117,28 @@ void print_tree(struct no *raiz, char ordem[9]){
     } else {
         printf("\nOpção escolhida é inválida");
     }
+}
+
+void Ler_arch(char nome_arquivo[], struct no *raiz){
+
+FILE *arch = fopen (nome_arquivo,"r");
+
+    if (arch == NULL){
+        printf("\nNão foi possivel abrir o arquivo");
+    }
+    
+    Aluno aluno;
+
+    int nota;
+    int mat;
+    char *name = (char*)malloc(30*sizeof(char));
+
+while(!feof(arch)){
+    fscanf(arch,"%i %i %s", &nota, &mat, name);
+    aluno = criaraluno2(name,mat,nota);
+    raiz = inserir(raiz,aluno);
+}
+
+fclose(arch);
+
 }
