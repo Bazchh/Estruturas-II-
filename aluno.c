@@ -14,7 +14,7 @@ typedef unsigned int matricula;
 
 //ESCOPO DAS FUNÇÕES
 Aluno* criaraluno(const char *string, matricula id, nota n);
-
+Aluno criaraluno2(const char *string, matricula id, nota n);
 /*
 struct no {
     struct aluno dado;
