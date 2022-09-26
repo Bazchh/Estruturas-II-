@@ -18,7 +18,7 @@ void posordem(struct no *raiz);
 void print(Aluno A);
 void print_tree(struct no *raiz, char ordem[]);
 void Ler_arch(char nome_arquivo[], struct no *raiz);
-
+Aluno search(struct no *raiz, Aluno a);
 int main(){
     
 struct no *raiz   = (struct no*)malloc(sizeof(struct no));
@@ -35,11 +35,18 @@ scanf("%s", arquivo);
 
 Ler_arch(arquivo, raiz);
 
-//fclose(arch);
 char ordem[9];
 printf("\nInsira a ordem que deseja imprimir: ");
 scanf("%s", ordem);
 print_tree(raiz,ordem);
+
+Aluno a1 = search(raiz, a1);
+printf("\nInsira dados para serem buscados na arvore: ");
+scanf(" %i %f %s", &a1.id, &a1.n1, a1.nome);
+
+
+printf("\nDados encontrados: ");
+
 
 }
 
@@ -129,16 +136,29 @@ FILE *arch = fopen (nome_arquivo,"r");
     
     Aluno aluno;
 
-    int nota;
+    float nota;
     int mat;
     char *name = (char*)malloc(30*sizeof(char));
 
 while(!feof(arch)){
-    fscanf(arch,"%i %i %s", &nota, &mat, name);
+    fscanf(arch,"%f %i %s", &nota, &mat, name);
     aluno = criaraluno2(name,mat,nota);
     raiz = inserir(raiz,aluno);
 }
 
 fclose(arch);
+
+}
+
+Aluno search(struct no *raiz, Aluno a){
+    struct no *aux = novono(a);
+    if (raiz = aux){
+        Aluno R = aux->dado;
+        return R;
+    } else if(raiz != aux){
+        if (raiz > aux){
+            search(raiz->dir, a);
+        }
+    }
 
 }
