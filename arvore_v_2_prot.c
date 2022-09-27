@@ -18,7 +18,7 @@ void posordem(struct no *raiz);
 void print(Aluno A);
 void print_tree(struct no *raiz, char ordem[]);
 struct no *Ler_arch(char nome_arquivo[], struct no *raiz);
-void search(struct no *raiz, Aluno a);
+struct no *search(struct no *raiz, Aluno a);
 
 int main(){
     
@@ -42,13 +42,10 @@ scanf(" %s", ordem);
 
 print_tree(raiz,ordem);
 
-Aluno a1; 
-printf("\nInsira dados para serem buscados na arvore: ");
-scanf(" %i %f %s", &a1.id, &a1.n1, a1.nome);
+char busca[5];
+printf("\nBuscar dados por nome ou id? ");
+scanf("%s", busca);
 
-
-printf("\nDados encontrados: ");
-search(raiz, a1);
 
 
 }
@@ -156,7 +153,7 @@ return raiz;
 
 }
 
-void search(struct no *raiz, Aluno a){
+struct no *search(struct no *raiz, Aluno a){
     struct no *aux = novono(a);
     if(raiz == NULL){
         printf("\nA arvore esta vazia");
@@ -166,8 +163,14 @@ void search(struct no *raiz, Aluno a){
         print(R);
     } else if(raiz != aux){
         if (raiz > aux){
-            search(raiz->dir, a);
+            aux = search(raiz->dir, a);
+        } else if (raiz < aux){
+            aux = search(raiz->esq, a);
         }
     }
+    
+    return raiz; 
 
 }
+
+void search_name(struct no *);
