@@ -42,9 +42,9 @@ scanf(" %s", ordem);
 
 print_tree(raiz,ordem);
 
-char busca[5];
-printf("\nBuscar dados por nome ou id? ");
-scanf("%s", busca);
+int ident;
+printf("\nInsira o ID a ser buscado: ");
+scanf("%i", &ident);
 
 
 
@@ -158,19 +158,16 @@ struct no *search(struct no *raiz, Aluno a){
     if(raiz == NULL){
         printf("\nA arvore esta vazia");
     }
-    if (raiz = aux){
+    if (raiz->dado.id = aux->dado.id){
         Aluno R = aux->dado;
         print(R);
     } else if(raiz != aux){
-        if (raiz > aux){
+        if (raiz->dado.id > aux->dado.id){
             aux = search(raiz->dir, a);
-        } else if (raiz < aux){
+        } else if (raiz->dado.id < aux->dado.id){
             aux = search(raiz->esq, a);
         }
     }
-    
-    return raiz; 
-
+    return aux; 
 }
 
-void search_name(struct no *);
