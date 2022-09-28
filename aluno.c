@@ -15,17 +15,7 @@ typedef unsigned int matricula;
 //ESCOPO DAS FUNÇÕES
 Aluno* criaraluno(const char *string, matricula id, nota n);
 Aluno criaraluno2(const char *string, matricula id, nota n);
-/*
-struct no {
-    struct aluno dado;
-    struct no *esq;
-    struct no *dir;
-};
 
-typedef struct arvore{
-    struct no *raiz;
-}tree;
-*/
 Aluno* criaraluno(const char *string, matricula id, nota n){
     Aluno *novo = (Aluno*)malloc(sizeof(Aluno));
     novo->n1 = n;
@@ -40,19 +30,5 @@ Aluno criaraluno2(const char *string, matricula id, nota n){
     novo.nome = string;
     return novo;
 }
-/*
-int main(){
-    Aluno *a = criaraluno("Mikael\0", 10, 7);
-    printf("\nNome: %s", a->nome);
-    printf("\nMatricula: %i", a->id);
-    printf("\nNota: %f", a->n1);
-    return 0;
-
-}
-
-void menu (){
-    printf("\n======Escolha uma opção======\n");
-    printf("");
-}*/
 
 #endif
