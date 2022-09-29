@@ -8,7 +8,7 @@ struct no {
     struct no *esq;
     struct no *dir;
 };
-//Escopo das funções
+//Escopo das funções;
 struct no *inserir(struct no *raiz, Aluno dados);
 struct no *inserir_esq(struct no *raiz, Aluno dados);
 struct no *inserir_dir(struct no *raiz, Aluno dados);
