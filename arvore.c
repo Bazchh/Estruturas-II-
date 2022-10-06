@@ -28,6 +28,39 @@ struct no *inserir(struct no *raiz, Aluno dados){
      return raiz;
 }  
 
+Aluno sucessor(struct no *r){
+    Aluno s = r->dado;
+    while(r->esq != 0){
+        s = r->esq->dado;
+        r = r->esq;
+    }
+    r->esq = 0;
+    return s;
+}
+
+struct no* remover(struct no* r, matricula id){
+    if(r == 0){
+        return r;
+    }
+    if(id < r->dado.id){
+        r->esq = remover(r->esq, id);
+    }else if(id > r->dado.id){
+        r->dir = remover(r->dir, id);
+    }else{
+
+        if(r->esq == 0){
+            return r->dir;
+        }if(r->dir == 0){
+            return r->esq;
+        }
+
+        r->dado = sucessor(r->dir);
+        r->dir = remover(r->dir, r->dado.id);
+
+    }
+    return r;
+}
+
 void print(Aluno A) {
     printf("Id: %d\nNome: %s\nNota: %.1f\n\n", A.id, A.nome, A.n1);
 }
@@ -95,7 +128,6 @@ FILE *arch = fopen (nome_arquivo,"r");
 
     float nota;
     int mat;
-    
 
 while(!feof(arch)){
     char *name = (char*)malloc(30*sizeof(char));
