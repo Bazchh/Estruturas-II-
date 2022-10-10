@@ -24,28 +24,30 @@ int inserir(hash H, dataItem *d, int (*funcHash)(dataItem *)) { //função que r
     return -1;
 }
 
-int remover(hash H, dataItem *d, int (*funcHash)(dataItem *)) {
-    int key = funcHash(d);
-    if (H[key] != 0) {
-        dataItem *purge = H[key];
+int remover(hash H, dataItem *d, int (*funcHash)(dataItem *)) { //Função que remove um elemento da tabela hash, recebe como parametro a tabela hash em si, um tipo "dataItem" e a função do metodo
+//a ser utilizada para realizar a remoção. Essa função tem como parametro um tipo "dataItem"
+    int key = funcHash(d); //Recebe o valor retornado pela função do metodo escolhido (divisão ou multiplicação) 
+    if (H[key] != 0) { //Caso a posição dada pelo calculo da função do metodo escolhido não esteja vazia, ela remove o elemento naquela posição
+        dataItem *purge = H[key]; //Cria um tipo "dataItem" como ponteiro que aponta para a posição que está cheia e remover o elemento
         delete purge;
         // purge = 0;
-        H[key] = 0;
+        H[key] = 0; //Após remover o elemento, insere-se o valor 0, sinalizando "vazio" para aquela posição
         return 0;
     }
     return -1;
 }
 
-dataItem *buscar(hash H, int key, int (*funcHash)(dataItem *)){
-    dataItem *res = (dataItem*)malloc(sizeof(dataItem));
-    res->key = key;
-    int pos = funcHash(res);
-    res = H[pos];
+dataItem *buscar(hash H, int key, int (*funcHash)(dataItem *)){ //função que retorna um ponteiro do tipo "dataItem" e recebe como parametro a tabela hash, uma chave
+// e a função do metodo escolhido para realizar a busca que tem como parametro um tipo "dataItem"
+    dataItem *res = (dataItem*)malloc(sizeof(dataItem)); //Alocando e criando uma variavel do tipo "dataItem"
+    res->key = key; //A variavel chave do tipo criado recebe a key que foi passada como parametro
+    int pos = funcHash(res); //Criamos uma variavel do tipo int para receber a posição buscado do elemento em questão que atribuimos o valor retornado pela função do metodo escolhido (multiplição ou divisão)
+    res = H[pos]; //atribuimos o valor da posição encontrada e retornamos o valor com o mesmo armazenado na variavel do tipo "dataItem"
     return res;
 }
 
-int divisao(dataItem *d) {
-    return d->key % SIZE;
+int divisao(dataItem *d) { //Função do metodo da divisão
+    return d->key % SIZE; //A função retorna o resto da chave, do elemento que vai ser inserido pelo tamanho da tabela (1024)
 }
 
 typedef unsigned long long int bigNumber;
