@@ -4,15 +4,15 @@
 #include <stdlib.h>
 #define SIZE 1024 //Tamanho para de posições da tabela hash
 
-typedef dataItem *hash[SIZE]; //Definindo "apelido" para a struct que armazena a key, a cidade e as coordenas com struct "gps"
+typedef dataItem *hash[SIZE]; //Definindo um vetor de ponteiros de dataItem com nome de "hash"
 
 void init(hash &H) {   //Função que inicia uma tabela hash e esvazia as posições da tabela
     for (int i = 0; i < SIZE; i++) {
         H[i] = 0;
     }
 }
-int inserir(hash H, dataItem *d, int (*funcHash)(dataItem *)) { //função que retorna um inteiro e recebe uma tabela hash, uma tipo "dataItem"
-// e uma função do tipo inteiro que tem como parametro do tipo "dataItem" usada para escolher a posição (exemplos: metodo da multiplicação e da divisão)
+int inserir(hash H, dataItem *d, int (*funcHash)(dataItem *)) { //função que retorna um inteiro e recebe uma tabela hash, e um dos elementos do vetor de "dataItem"
+// e uma função do tipo inteiro que tem como parametro uma variavel do tipo "dataItem" usada para escolher a posição (exemplos: metodo da multiplicação e da divisão)
     int key = funcHash(d); //A key recebe o valor do resultado da função que foi passada
     dataItem *copy = (dataItem*)malloc(sizeof(dataItem)); //Criamos e alocamos esáço para uma variavel auxiliar para copiar os dados passados por parametro para o tipo "dataItem" 
     //passado na função 
