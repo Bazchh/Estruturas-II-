@@ -11,7 +11,7 @@ void saveDataItens(dataItem *);
 cidade *getCidades(char *arquivo);
 gps *getGps(char *);
 char* remover(char* text);
-
+/*
 int main() {
     char *arquivo1 = (char *)"bancoDeDados/legenda.txt";
     cidade *todasCidades = getCidades(arquivo1);
@@ -22,7 +22,7 @@ int main() {
     dataItem *d = getItens(todasCidades, locais);
     printDataItens(d);
     saveDataItens(d);
-}
+}*/
 
 cidade *getCidades(char *arquivo) {
     FILE *f = fopen(arquivo, "r");
@@ -41,7 +41,7 @@ cidade *getCidades(char *arquivo) {
         cid = (char *)malloc(40 * sizeof(char));
         fscanf(f, "%d %s ", &cod, uf);
         fgets(cid, 40 * sizeof(char), f);
-        printf("%d %s %s", cod, uf, cid);
+       // printf("%d %s %s", cod, uf, cid);
         cidades[i].id = cod;
         cidades[i].estado = uf;
         cidades[i].cidade = cid;
@@ -64,7 +64,7 @@ gps *getGps(char *localizacoes) {
     int i = 0;
     while (!feof(f)) {
         fscanf(f, "%u;%f;%f", &cod, &la, &lo);
-        printf("%u;%.2f;%.2f\n", cod, la, lo);
+        //printf("%u;%.2f;%.2f\n", cod, la, lo);
         local[i].id = cod;
         local[i].la = la;
         local[i].lo = lo;

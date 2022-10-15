@@ -1,9 +1,10 @@
 #include "cidade.cpp"
+#include "lerArquivos.cpp"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #define SIZE 1024 //Tamanho para de posições da tabela hash
-
+int divisao(dataItem *d);
 typedef dataItem *hash[SIZE]; //Definindo um vetor de ponteiros de dataItem com nome de "hash"
 
 int duplohash(hash H1, dataItem *d, int (*funcHash)(dataItem *), int (*funchash)(dataItem *)){
@@ -11,6 +12,12 @@ int duplohash(hash H1, dataItem *d, int (*funcHash)(dataItem *), int (*funchash)
     key1 = funcHash(d);
     key2 = funchash (d);
     key1 = key1 - key2;
+    if (H1[key1] == 0){
+        return key1;
+    } else if (H1[key1] != 0){
+        key1 = duplohash(H1,d,funcHash,funchash);
+    }
+
     return key1;
 }
 
@@ -18,6 +25,15 @@ void init(hash &H) {   //Função que inicia uma tabela hash e esvazia as posiç
     for (int i = 0; i < SIZE; i++) {
         H[i] = 0;
     }
+}
+void printHash(hash H){
+
+for(int i = 0; i < SIZE; i++){
+    printf("\n [%i] \nCEP: %i \nEstado: %s \n Cidade: %s", i+1,H[i]->city.id,H[i]->city.estado,H[i]->city.cidade);
+    printf("\n ID: %i \n Latitude: %f \n Longitude: %f",H[i]->GPS.id, H[i]->GPS.la, H[i]->GPS.lo);
+    printf("\n Key: %i\n", H[i]->key);
+   }
+
 }
 int inserir(hash H, dataItem *d, int (*funcHash)(dataItem *)) { //função que retorna um inteiro e recebe uma tabela hash, e um dos elementos do vetor de "dataItem"
 // e uma função do tipo inteiro que tem como parametro uma variavel do tipo "dataItem" usada para escolher a posição (exemplos: metodo da multiplicação e da divisão)
@@ -29,9 +45,7 @@ int inserir(hash H, dataItem *d, int (*funcHash)(dataItem *)) { //função que r
         H[key] = copy;
         return 0;
     } else if (H[key]!= 0){
-       
        key = duplohash(H, d,(*funcHash), divisao);
-       
     }
     return -1;
 }
@@ -41,7 +55,7 @@ int remover(hash H, dataItem *d, int (*funcHash)(dataItem *)) { //Função que r
     int key = funcHash(d); //Recebe o valor retornado pela função do metodo escolhido (divisão ou multiplicação) 
     if (H[key] != 0) { //Caso a posição dada pelo calculo da função do metodo escolhido não esteja vazia, ela remove o elemento naquela posição
         dataItem *purge = H[key]; //Cria um tipo "dataItem" como ponteiro que aponta para a posição que está cheia e remover o elemento
-        delete purge;
+        free (purge);
         // purge = 0;
         H[key] = 0; //Após remover o elemento, insere-se o valor 0, sinalizando "vazio" para aquela posição
         return 0;
@@ -83,23 +97,15 @@ int hashCodeDobra(dataItem *d) {
 
 int main() {
     dataItem *d = (dataItem *)malloc(sizeof(dataItem));
-    d->city.cidade = (char *)"Pau dos Ferros";
-    d->city.id = 340940;
-    d->city.estado = (char *)"RN";
-    d->key = 340940;
-    d->GPS.id = 340940;
-    d->GPS.la = -6.11;
-    d->GPS.lo = -38.2;
-
-    int res = multiplicacao(d);
     hash H;
     init(H);
+    char *arquivo1 = (char*)"legenda.txt";
+    char *arquivo2 = (char*)"coordenadas.csv";
+   cidade *cidades = getCidades(arquivo1);
+   gps *local = getGps(arquivo2);
+   d = getItens(cidades,local);
+    int i = 1;
+   inserir(H,d,multiplicacao);
+    //printHash(H);
 
-    inserir(H, d, divisao);
-
-    // Não faz sentido mudar a função Hash, mas coloquei aqui para mostrar que é possível
-    inserir(H, d, multiplicacao);
-    remover(H, d, multiplicacao);
-    inserir(H, d, multiplicacao);
-    dataItem* dt = buscar(H, 340940, multiplicacao);
 }
