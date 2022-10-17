@@ -28,30 +28,21 @@ void init(hash &H, int n) {   //Função que inicia uma tabela hash e esvazia as
         H[i] = 0;
     }
 }
-void printHash(hash H){
 
-for(int i = 0; i < SIZE; i++){
-    printf("\n [%i] \nCEP: %i \nEstado: %s \n Cidade: %s", i+1,H[i]->city.id,H[i]->city.estado,H[i]->city.cidade);
-    printf("\n ID: %i \n Latitude: %f \n Longitude: %f",H[i]->GPS.id, H[i]->GPS.la, H[i]->GPS.lo);
-    printf("\n Key: %i\n", H[i]->key);
-   }
-
-}
 int inserir(hash H, dataItem d, int (*funcHash)(dataItem *, int ), int cont) { //função que retorna um inteiro e recebe uma tabela hash, e um dos elementos do vetor de "dataItem"
 // e uma função do tipo inteiro que tem como parametro uma variavel do tipo "dataItem" usada para escolher a posição (exemplos: metodo da multiplicação e da divisão)
     dataItem *aux = (dataItem *)malloc(sizeof(dataItem));
     *aux = d;
+
     int key = funcHash(aux, SIZE); //A key recebe o valor do resultado da função que foi passada
-    dataItem *copy = (dataItem*)malloc(sizeof(dataItem)); //Criamos e alocamos esáço para uma variavel auxiliar para copiar os dados passados por parametro para o tipo "dataItem" 
-    //passado na função 
-    *copy = *aux; //Copiando dados para variavel auxiliar
+
     if (H[key] == 0) { //Caso a posição dada pelo calculo da função do metodo escolhido esteja vazia, o novo elemento é inserido na tabela hash
-        H[key] = copy;
+        H[key] = aux;
         return 0;
     } else if (H[key]!= 0){
         int i = 1;
        key = duplohash(aux,H,key, i,divisao);
-       H[key] = copy;
+       H[key] = aux;
     }
     return -1;
 }
@@ -83,6 +74,13 @@ int divisao(dataItem *d, int n) { //Função do metodo da divisão
 }
 
 typedef unsigned long long int bigNumber;
+
+void printHash(hash H){
+
+    for(int i = 0; i < SIZE; i++){
+    printf("\n ID: %i\n Estado: %s \n Cidade: %s Longitude: %.2f Latitude: %.2f\n\n",H[i]->key,H[i]->city.estado, H[i]->city.cidade,H[i]->GPS.lo,H[i]->GPS.la);
+    }   
+}
 
 int multiplicacao(dataItem *d, int n) {
     bigNumber key = (bigNumber)d->key;
@@ -117,5 +115,5 @@ int main() {
    inserir(H,aux,multiplicacao, i);
    i++;
     }
-
+    printHash(H);
 }
