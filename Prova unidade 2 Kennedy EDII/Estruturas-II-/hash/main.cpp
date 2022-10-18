@@ -28,15 +28,6 @@ struct dataItem {
     gps GPS;
 };
 
-struct no{
-    dataItem dados;
-    struct no *prox;
-};
-
-struct lista {
-    struct no *inicio;
-}Lista;
-
 cidade *getCidades(char *arquivo) {
     FILE *f = fopen(arquivo, "r");
     cidade *cidades = (cidade *)malloc(MAX * sizeof(cidade));
