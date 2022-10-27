@@ -183,12 +183,23 @@ int remover(hash H, dataItem *d, int (*funcHash)(dataItem *, int )) {
     return -1;
 }
 
-dataItem *buscar(hash H, int key, int (*funcHash)(dataItem *, int )){ 
-    dataItem *res = (dataItem*)malloc(sizeof(dataItem));  
-    res->key = key; 
-    int pos = funcHash(res,SIZE); 
-    res = H[pos];  
-    return res;
+dataItem *buscar(hash H, int id, int (*funcHash)(dataItem *, int )){ 
+    dataItem *d = (dataItem*)malloc(sizeof(dataItem));
+    d->key = id;
+
+    int key = funcHash(d,SIZE);
+    
+    if(d->key == H[key]->key){
+    d = H[key];  
+    return d;
+    } else if(d->key != H[key]->key){
+    int i = 1;    
+    key = duplohash(d,H,key,i,divisao); 
+    d = H[key];  
+    return d;
+
+    }
+
 }
 
 void printHash(hash H){
@@ -215,6 +226,15 @@ int TabelaHash() {
    i++;
     }
     printHash(H);
+
+int id;
+
+printf("Insira o ID a ser buscado na tabela Hash: ");
+scanf("%i", &id);
+
+dataItem *dt = buscar(H, id, multiplicacao);
+
+printf("\n\n %i \n%s ",dt->key ,dt->city.cidade);
 
     return 0;
 }
