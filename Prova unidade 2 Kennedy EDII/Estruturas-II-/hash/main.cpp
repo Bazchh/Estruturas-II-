@@ -26,6 +26,7 @@ struct dataItem {
     int key;
     cidade city;
     gps GPS;
+    int estado;
 };
 
 cidade *getCidades(char *arquivo) {
@@ -109,26 +110,10 @@ dataItem *getItens(cidade *cities, gps *local) {
 
 typedef dataItem *hash[SIZE]; //Definindo um vetor de ponteiros de dataItem com nome de "hash"
 
-int duplohash(dataItem *d, hash H, int key, int i, int (*funchHash)(dataItem *, int )){
-   int key2 = funchHash(d, SIZE-i) + 1;
-    if(H[key2]!=0){
-        key2 = (key+(i*key2))%SIZE;
-    }
-   if(H[key2] == 0){
-    return key2;
-   } else if(H[key2]!=0){
-    i++;
-    key2 = duplohash(d,H,key2,i,funchHash);
-    
-   }
-
- return key2;
-}
-
 typedef unsigned long long int bigNumber;
 
-void init(hash &H, int n) {   
-    for (int i = 0; i < n; i++) {
+void init(hash &H) {   
+    for (int i = 0; i < SIZE; i++) {
         H[i] = 0;
     }
 }
@@ -170,21 +155,88 @@ int inserir(hash H, dataItem d){
   return key;
 }
 
-int remover(hash H, dataItem *d, int (*funcHash)(dataItem *, int )) {
-
-    int key = funcHash(d,SIZE); 
-    if (H[key] != 0) { 
-        dataItem *purge = H[key]; 
-        free (purge);
+int remover(hash H, dataItem *d, int id) {
+    int key, k, m, key_inicio;  
+    k = 3;
+    m = 0;
+    key = hash_modular(d,k);
+    key_inicio = key;
+    if(H[key]->key == id){
+        dataItem *limpa = H[key];
+        free(limpa);
         H[key] = 0;
         return 0;
+    } else if(H[key] == 0 || H[key]->estado == -1){
+        key = (((hash_modular(d,k))%k)+k*((hash_modular(d,m))+1))%SIZE;
+        m++; 
+        k++;
     }
-    return -1;
+
+    while(H[key != 0]){
+        key = (((hash_modular(d,k))%k)+k*((hash_modular(d,m))+1))%SIZE;
+        m++; 
+        k++;
+    if(H[key]->key == id){
+        dataItem *limpa = H[key];
+        free(limpa);
+        H[key] = 0;
+        return 0;
+    } else if(H[key] == 0 || H[key]->estado == -1){
+        key = (((hash_modular(d,k))%k)+k*((hash_modular(d,m))+1))%SIZE;
+        m++; 
+        k++;
+        }
+      if(key == key_inicio){
+        return -1;
+      }  
+    }
+    return 0;
 }
 
-dataItem *buscar(hash H, int id){ 
+dataItem *buscar(hash H, dataItem *e, int id){ 
+    int key, k, m, key_inicio;
     dataItem *d = (dataItem*)malloc(sizeof(dataItem));
     d->key = id;
+    k = 3;
+    m = 0;
+    key = hash_modular(e,k);
+    key_inicio = key;
+    if(H[key]->key == d->key){
+        
+        d = H[key];
+        
+        return d;
+    } else if(H[key] == 0 || H[key]->estado == -1){
+        key = (((hash_modular(e,k))%k)+k*((hash_modular(e,m))+1))%SIZE;
+        m++; 
+        k++;
+    }
+
+    while(H[key] != 0){
+    
+    key = (((hash_modular(e,k))%k)+k*((hash_modular(e,m))+1))%SIZE;
+    m++; 
+    k++; 
+    
+    if(H[key] == 0 || H[key]->estado == -1){
+
+        m++; 
+        k++;
+
+        key = (((hash_modular(e,k))%k)+k*((hash_modular(e,m))+1))%SIZE;
+        }
+
+    if(H[key]->key == d->key){
+        d = H[key];
+        
+        break; 
+        }
+    
+    if(key == key_inicio){
+        exit(-1);
+    }
+
+ }
 
 return d;    
 }
@@ -192,14 +244,18 @@ return d;
 void printHash(hash H){
 
     for(int i = 0; i < SIZE; i++){
+    
+    if(H[i]!=0){
     printf("\n ID: %i\n Estado: %s \n Cidade: %s Longitude: %.2f Latitude: %.2f\n\n",H[i]->key,H[i]->city.estado, H[i]->city.cidade,H[i]->GPS.lo,H[i]->GPS.la);
+    }
+    
     }   
 }
 
 int TabelaHash() {
     dataItem *d = (dataItem *)malloc(sizeof(dataItem));
     hash H;
-    init(H, SIZE);
+    init(H);
     char *arquivo1 = (char*)"legenda.txt";
     char *arquivo2 = (char*)"coordenadas.csv";
    cidade *cidades = getCidades(arquivo1);
@@ -211,20 +267,21 @@ int TabelaHash() {
    aux = d[i];
    inserir(H,aux);
    i++;
-    }
-
- free(d);   
-   /* printHash(H);
-
-int id;
-
-printf("Insira o ID a ser buscado na tabela Hash: ");
-scanf("%i", &id);
-*/
-
-for(int i = 0; i < SIZE; i++){
-printf("\n ID: %s\n\n",H[i]->city.cidade);
     } 
+    printHash(H);
+int id;
+printf("\nInsira um ID a ser buscado: ");
+scanf("%i", &id);
+
+dataItem *dt = buscar(H,d,id);
+
+printf("\n Cidade encontrada! \n");
+printf(" ID: %i \n Estado: %s \n Cidade: %s Longitude: %.2f Latitude: %.2f\n\n",dt->key, dt->city.estado, dt->city.cidade, dt->GPS.lo, dt->GPS.la);
+
+printf("\nInsira um ID a ser deletado: ");
+scanf("%i", &id);
+
+remover(H,d,id);
 
     return 0;
 }
