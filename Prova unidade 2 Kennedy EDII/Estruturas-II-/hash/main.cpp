@@ -132,43 +132,42 @@ void init(hash &H, int n) {
         H[i] = 0;
     }
 }
-int divisao(dataItem *d, int n) { 
-    return d->key % n; 
+int hash_modular(dataItem *d,int k){
+    return ((d->key % SIZE)+k)%SIZE;
 }
-
-int multiplicacao(dataItem *d, int n) {
-    bigNumber key = (bigNumber)d->key;
-    key *= key;
-    int digits = ceil(log2((bigNumber)540000 * 540000));
-    int signif = ceil(log2(SIZE - 1));
-    int remover = digits - signif;
-    int digitMask = (int)ceil(float(remover) / 2);
-    bigNumber mask = ((SIZE-1) << digitMask);
-    key = key & mask;
-    key = (key >> digitMask);
-    return key;
-}
-
-int hashCodeDobra(dataItem *d) {
-    return d->key % SIZE;
-}
-
-int inserir(hash H, dataItem d, int (*funcHash)(dataItem *, int ), int cont) { 
-
-    dataItem *aux = (dataItem *)malloc(sizeof(dataItem));
-    *aux = d;
-
-    int key = funcHash(aux, SIZE);  
-
-    if (H[key] == 0) {
-        H[key] = aux;
-        return 0;
-    } else if (H[key]!= 0){
-        int i = 1;
-       key = duplohash(aux,H,key, i,divisao);
-       H[key] = aux;
+int inserir(hash H, dataItem d){
+  int key, k, m, key_inicio;
+  dataItem *copy = (dataItem*)malloc(sizeof(dataItem));
+  *copy = d;
+  k = 3;
+  m = 0;
+  key = hash_modular(copy,k);
+  key_inicio = key;
+   
+  if(H[key] == 0){
+        H[key] = copy;
+        
+        return key;
     }
-    return -1;
+
+ while(H[key] != 0){
+    
+    key = (((hash_modular(copy,k))%k)+k*((hash_modular(copy,m))+1))%SIZE;
+    m++; 
+    k++; 
+
+    if(H[key] == 0){
+        H[key] = copy;
+        
+        break; 
+    }
+
+    if(key == key_inicio){
+        return -1;
+    }
+
+ }
+  return key;
 }
 
 int remover(hash H, dataItem *d, int (*funcHash)(dataItem *, int )) {
@@ -183,23 +182,11 @@ int remover(hash H, dataItem *d, int (*funcHash)(dataItem *, int )) {
     return -1;
 }
 
-dataItem *buscar(hash H, int id, int (*funcHash)(dataItem *, int )){ 
+dataItem *buscar(hash H, int id){ 
     dataItem *d = (dataItem*)malloc(sizeof(dataItem));
     d->key = id;
 
-    int key = funcHash(d,SIZE);
-    
-    if(d->key == H[key]->key){
-    d = H[key];  
-    return d;
-    } else if(d->key != H[key]->key){
-    int i = 1;    
-    key = duplohash(d,H,key,i,divisao); 
-    d = H[key];  
-    return d;
-
-    }
-
+return d;    
 }
 
 void printHash(hash H){
@@ -221,20 +208,23 @@ int TabelaHash() {
    int i = 0;
    dataItem aux;
    while(i < SIZE){ 
-    aux = d[i];
-   inserir(H,aux,multiplicacao, i);
+   aux = d[i];
+   inserir(H,aux);
    i++;
     }
-    printHash(H);
+
+ free(d);   
+   /* printHash(H);
 
 int id;
 
 printf("Insira o ID a ser buscado na tabela Hash: ");
 scanf("%i", &id);
+*/
 
-dataItem *dt = buscar(H, id, multiplicacao);
-
-printf("\n\n %i \n%s ",dt->key ,dt->city.cidade);
+for(int i = 0; i < SIZE; i++){
+printf("\n ID: %s\n\n",H[i]->city.cidade);
+    } 
 
     return 0;
 }
