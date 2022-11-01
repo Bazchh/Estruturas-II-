@@ -189,6 +189,10 @@ int remover(hash H, dataItem *d, int id) {
       if(key == key_inicio){
         return -1;
       }  
+        if(m > 1023){
+            key_inicio = key;
+        }
+
     }
     return 0;
 }
@@ -235,6 +239,9 @@ dataItem *buscar(hash H, dataItem *e, int id){
     if(key == key_inicio){
         exit(-1);
     }
+    if(m > 1023){
+            key_inicio = key;
+        }
 
  }
 
@@ -253,7 +260,7 @@ void printHash(hash H){
 }
 
 int TabelaHash() {
-    dataItem *d = (dataItem *)malloc(sizeof(dataItem));
+    dataItem *d = (dataItem *)malloc(sizeof(dataItem)); //Criando variavel do tipo DataItem
     hash H;
     init(H);
     char *arquivo1 = (char*)"legenda.txt";
