@@ -204,9 +204,27 @@ dataItem *buscar(hash H, int key, int (*funcHash)(dataItem *, int )){
 
 void printHash(hash H){
 
-    for(int i = 0; i < SIZE; i++){
-    printf("\n ID: %i\n Estado: %s \n Cidade: %s Longitude: %.2f Latitude: %.2f\n\n",H[i]->key,H[i]->city.estado, H[i]->city.cidade,H[i]->GPS.lo,H[i]->GPS.la);
-    }   
+      for(int i = 0; i < SIZE; i++){
+
+        if((H[i] != NULL)){
+            dataItem *pi = (dataItem*)malloc(sizeof(dataItem));
+            struct no *aux = (struct no*)malloc(sizeof(struct no));
+            pi = H[i];
+            aux = H[i]->inicio;
+            printf("\n ID: %i\n Estado: %s \n Cidade: %s Longitude: %.2f Latitude: %.2f\n\n",H[i]->key,H[i]->city.estado, H[i]->city.cidade,H[i]->GPS.lo,H[i]->GPS.la);
+            
+            while(aux != 0){
+            
+            printf("\n ID: %i\n Estado: %s \n Cidade: %s Longitude: %.2f Latitude: %.2f\n\n",aux->data.key,aux->data.city.estado, aux->data.city.cidade,aux->data.GPS.lo,aux->data.GPS.la);
+            aux = aux->prox;
+   
+                if(aux == NULL){
+                    break;
+                }
+            }
+        }
+    
+    } 
 }
 
 int TabelaHash() {
