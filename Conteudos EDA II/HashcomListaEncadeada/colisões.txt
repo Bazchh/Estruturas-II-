@@ -1,0 +1,20 @@
+COLISÕES NA TABELA HASH:
+i = 293
+i = 300
+i = 303
+i = 317 (duas colisões)
+i = 304
+i = 307
+i = 312
+i = 313
+i = 314
+i = 321
+i = 323
+i = 325
+i = 500 (duas colisões)
+i = 507
+i = 509 (três colisões)
+i = 514
+i = 517
+i = 518 (duas colisões)
+i = 519 
